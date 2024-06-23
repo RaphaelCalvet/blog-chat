@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "../base_registration.html" %}
 
-</body>
-</html>
+{% block content %}
+  <div class="register-form">
+    <h2>Registrar</h2>
+    <form method="POST">
+      {% csrf_token %}
+      {% for field in register_form %}
+        <div class="form-group">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.errors %}
+            <div class="alert alert-danger">
+              {{ field.errors.0 }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button class="submit-button" type="submit">Registrar</button>
+    </form>
+  </div>
+{% endblock %}

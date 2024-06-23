@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base_generic.html" %}
 
-</body>
-</html>
+{% block content %}
+    <div class="container-delete">
+        <h2>Deletar Post</h2>
+        <p>Tem certeza de que deseja deletar "{{ object.title }}"?</p>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="submit" class="delete-button" value="Confirmar Exclusão">
+        </form>
+    </div>
+{% endblock %}

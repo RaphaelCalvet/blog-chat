@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+{% extends "base_registration.html" %}
 
-</body>
-</html>
+{% block content %}
+  <div class="login-form">
+    <h2>Login</h2>
+    <form method="POST">
+    {% csrf_token %}
+      {{ form.as_p }}
+      <button class="submit-button" type="submit">Login</button>
+    </form>
+    <p>Se você ainda não tem uma conta, <a href="{% url 'register' %}">registre-se</a>.</p>
+  </div>
+{% endblock %}

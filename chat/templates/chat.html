@@ -1,10 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html>
+    <head>
+        <title>WebSocket Chat</title>
+        <style>
+            .chat-container {
+                font-family: Arial, sans-serif;
+                margin: 0 auto;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+                justify-content: space-between;
+                width: 50%;
+            }
 
-</body>
+            .chat-container h1, .chat-container h2 {
+                color: #333;
+                text-align: center;
+            }
+
+            .chat-container #messages {
+                list-style: none;
+                margin: 20px;
+                padding: 20px;
+                flex-grow: 1;
+                overflow: auto;
+                border: 1px solid #cccccc;
+                border-radius: 10px;
+                background-color: #ffffff;
+            }
+
+            .chat-container #messages li {
+                position: relative;
+                margin-top: 10px;
+                padding: 20px;
+                padding-bottom: 35px;
+                border-radius: 10px;
+                background: #5e87b6;
+                color: #ffffff;
+            }
+
+            .chat-container #messages li .content {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .chat-container #messages li .time {
+                position: absolute;
+                right: 10px;
+                bottom: 10px;
+                font-size: 0.8em;
+            }
+
+            .chat-container form {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                margin: 20px 0;
+                padding: 20px;
+                background-color: #cccccc;
+            }
+
+            .chat-container #messageText {
+                flex-grow: 1;
+                margin-right: 10px;
+                padding: 10px;
+                border: none;
+                border-radius: 10px;
+            }
+
+            .chat-container button {
+                padding: 10px 20px;
+                border: none;
+                border-radius: 10px;
+                background: #007bff;
+                color: #ffffff;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="chat-container">
+            <h1>WebSocket Chat</h1>
+            <h2>Your ID: <span id="ws-id"></span></h2>
+            <ul id='messages'></ul>
+            <form action="" onsubmit="sendMessage(event)">
+                <input type="text" id="messageText" autocomplete="off"/>
+                <button>Send</button>
+            </form>
+        </div>
+        <script>
+            var client_id = Date.now()
+            document.querySelector("#ws-id").textContent = client_id;
+            var ws = new WebSocket(`ws://localhost:8080/ws/${client_id}`);
+            ws.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                var messages = document.getElementById('messages')
+                var message = document.createElement('li')
+                var contentDiv = document.createElement('div')
+                contentDiv.className = 'content'
+                var sender = document.createElement('span')
+                sender.textContent = 'Sender ID: ' + data.clientId
+                var messageText = document.createElement('span')
+                messageText.textContent = data.message
+                contentDiv.appendChild(sender)
+                contentDiv.appendChild(messageText)
+                message.appendChild(contentDiv)
+                var time = document.createElement('span')
+                time.className = 'time'
+                time.textContent = 'Time: ' + data.time
+                message.appendChild(time)
+                messages.appendChild(message)
+                messages.scrollTop = messages.scrollHeight;   // Scroll to latest message
+            };
+            function sendMessage(event) {
+                event.preventDefault()
+                var input = document.getElementById("messageText")
+                var text = input.value
+                if(text){   // Prevent sending empty texts
+                    ws.send(text)
+                    input.value = ''
+                }
+            }
+        </script>
+    </body>
 </html>

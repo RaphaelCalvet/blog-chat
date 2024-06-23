@@ -1,10 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base_generic.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block content %}
+    <div class="post-creation">
+        <h1>Publicar uma nova postagem</h1>
+        <form method="POST" class="post-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Publicar</button>
+        </form>
+     </div>
+
+    <div class="posts-list">
+        <h1>Posts</h1>
+        <div class="posts-grid">
+            {% for post in posts %}
+                <div class="post-card">
+                    <h2>{{ post.title }}</h2>
+                    <p class="author">By: {{ post.author }}</p>
+                    <div class="post-content">
+                        <p>{{ post.content }}</p>
+                    </div>
+                    {% if post.author == request.user %}
+                        <a href="{% url 'post_edit' post.id %}">Editar</a>
+                        <a href="{% url 'post_delete' post.id %}">Deletar</a>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>Não há posts ainda.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
