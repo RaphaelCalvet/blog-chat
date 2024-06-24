@@ -266,3 +266,9 @@ button {
 .container-blog {
     flex: 1;
 }
+
+.edit-button, .delete-button {
+    text-decoration: None;
+    margin: 10px;
+
+}

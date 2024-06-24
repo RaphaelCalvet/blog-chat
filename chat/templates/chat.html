@@ -77,6 +77,11 @@
                 color: #ffffff;
                 cursor: pointer;
             }
+
+            .chat-container #messages .other-user {
+                background: #79d343;
+                color: #ffffff;
+            }
         </style>
     </head>
     <body>
@@ -90,13 +95,16 @@
             </form>
         </div>
         <script>
-            var client_id = Date.now()
+            var client_id = Date.now();
             document.querySelector("#ws-id").textContent = client_id;
             var ws = new WebSocket(`ws://localhost:8080/ws/${client_id}`);
             ws.onmessage = function(event) {
                 const data = JSON.parse(event.data);
-                var messages = document.getElementById('messages')
-                var message = document.createElement('li')
+                var messages = document.getElementById('messages');
+                var message = document.createElement('li');
+                if(data.clientId !== client_id) {
+                    message.classList.add('other-user');
+                }
                 var contentDiv = document.createElement('div')
                 contentDiv.className = 'content'
                 var sender = document.createElement('span')
@@ -111,13 +119,13 @@
                 time.textContent = 'Time: ' + data.time
                 message.appendChild(time)
                 messages.appendChild(message)
-                messages.scrollTop = messages.scrollHeight;   // Scroll to latest message
+                messages.scrollTop = messages.scrollHeight;
             };
             function sendMessage(event) {
                 event.preventDefault()
                 var input = document.getElementById("messageText")
                 var text = input.value
-                if(text){   // Prevent sending empty texts
+                if(text){
                     ws.send(text)
                     input.value = ''
                 }

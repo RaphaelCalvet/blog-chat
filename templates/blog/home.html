@@ -1,6 +1,8 @@
 {% extends "base_generic.html" %}
 {% load static %}
 
+{% block title %}Home{% endblock %}
+
 {% block content %}
     <div class="post-creation">
         <h1>Publicar uma nova postagem</h1>
@@ -22,8 +24,8 @@
                         <p>{{ post.content }}</p>
                     </div>
                     {% if post.author == request.user %}
-                        <a href="{% url 'post_edit' post.id %}">Editar</a>
-                        <a href="{% url 'post_delete' post.id %}">Deletar</a>
+                        <a class="edit-button" href="{% url 'post_edit' post.id %}">Editar </a>
+                        <a class="delete-button" href="{% url 'post_delete' post.id %}">Deletar </a>
                     {% endif %}
                 </div>
             {% empty %}
